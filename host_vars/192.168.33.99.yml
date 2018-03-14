@@ -1,6 +1,7 @@
 server_hostname:  "movabletype.local"
 root_email: "root@localhost"
 letsencrypt: False
+fail2ban: True
 denyhosts: False
 php: True
 nginx: False

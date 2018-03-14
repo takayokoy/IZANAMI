@@ -1,6 +1,7 @@
 server_hostname:  "mt.examaple.com"
 root_email: "alert@mt.example.com"
 letsencrypt: True
+fail2ban: True
 denyhosts: True
 php: False
 nginx: True

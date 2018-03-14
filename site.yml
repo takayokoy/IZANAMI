@@ -43,4 +43,6 @@
       when: movabletype 
     - role: supervisord
       tags: supervisord
-  
+    - role: fail2ban
+      tags: fail2ban
+

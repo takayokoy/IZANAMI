@@ -1,0 +1,10 @@
+[DEFAULT]
+bantime  = {{ fail2ban_param.bantime }}
+findtime  = {{ fail2ban_param.findtime }}
+maxretry = {{ fail2ban_param.maxretry }}
+
+backend = systemd
+
+[sshd]
+enabled = true
+banaction = firewallcmd-ipset

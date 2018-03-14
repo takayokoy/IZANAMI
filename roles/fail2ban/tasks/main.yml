@@ -1,0 +1,19 @@
+- name: install the 'fail2ban'
+  yum: name={{ item }} state=present
+  with_items:
+   - fail2ban
+   - fail2ban-systemd
+  tags: fail2ban
+
+- name: Create fail2ban configuration file
+  template: src=jail.local.j2 dest=/etc/fail2ban/jail.local
+  notify:
+    - restart fail2ban
+  tags: fail2ban
+
+- name: start fail2ban
+  service:
+    name: fail2ban
+    state: started
+    enabled: True
+  tags: fail2ban
