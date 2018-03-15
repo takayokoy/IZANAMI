@@ -8,3 +8,17 @@ backend = systemd
 [sshd]
 enabled = true
 banaction = firewallcmd-ipset
+
+[ddos]
+enabled = true
+backend = auto
+port = http,https
+filter = ddos
+{% if apache | bool %}
+logpath = /var/www/vhosts/{{ server_hostname }}/logs/access_log* tail
+{% else %}
+logpath = /var/www/vhosts/{{ server_hostname }}/logs/access.log tail
+{% endif %}
+bantime  = {{ fail2ban_param.bantime }}
+findtime  = {{ fail2ban_param.findtime }}
+maxretry = {{ fail2ban_param.maxretry }}
