@@ -183,7 +183,7 @@
   tags: httpd
 
 - name: delete the log
-  cron: name='delete the log' job="find /var/www/vhosts/*/logs/ -type f -name '*.gz' -mtime +31 -print0 | xargs -0 rm -rf 1>/dev/null" minute=5 hour=0 state=present
+  cron: name='delete the log' job="find /var/www/vhosts/*/logs/ -type f -name '*.gz' -mtime +31 -print0 | xargs -0 rm -rf 1>/dev/null && service fail2ban restart" minute=5 hour=0 state=present
   tags: httpd
 
 # pip passlibに依存

@@ -4,6 +4,7 @@
    - fail2ban
    - fail2ban-systemd
   tags: fail2ban
+  when: "{{ fail2ban | bool }}"
 
 - name: start fail2ban
   service:
@@ -11,25 +12,21 @@
     state: started
     enabled: True
   tags: fail2ban
-  
+  ignore_errors: yes
+  when: "{{ fail2ban | bool }}"
+
 - name: Create fail2ban configuration file
   template: src=jail.local.j2 dest=/etc/fail2ban/jail.local
   notify:
     - restart fail2ban
   tags: fail2ban
-
-- name: Create fail2ban access_log dummy file
-  template: src=access_log.dummy.j2 dest=/var/www/vhosts/{{ server_hostname }}/logs/access_log.dummy
-  tags: fail2ban
-  when: "{{ apache | bool }}"
+  ignore_errors: yes
+  when: "{{ fail2ban | bool }}"
 
 - name: Create fail2ban ddos configuration file
   template: src=ddos.conf.j2 dest=/etc/fail2ban/filter.d/ddos.conf
   notify:
     - restart fail2ban
   tags: fail2ban
-
-- name: fail2ban restart
-  cron: name='fail2ban-restart' job="service fail2ban restart" minute=10 hour=0 day=0 state=present
-  tags: fail2ban
-  when: "{{ apache | bool }}"
+  ignore_errors: yes
+  when: "{{ fail2ban | bool }}"
