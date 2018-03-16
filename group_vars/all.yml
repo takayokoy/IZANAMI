@@ -3,6 +3,7 @@ zone: Asia/Tokyo
 zoneinfo_path: /usr/share/zoneinfo/Asia/Tokyo
 movabletype: yes
 fail2ban_param:
-  bantime: 120
-  findtime: 60
-  maxretry: 5
+  bantime: 15
+  findtime: 3
+  maxretry: 10
+fail2ban_ignoreip:
