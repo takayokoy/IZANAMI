@@ -4,11 +4,20 @@ findtime  = {{ fail2ban_param.findtime }}
 maxretry = {{ fail2ban_param.maxretry }}
 
 ignoreip = 127.0.0.1/8 {{ fail2ban_ignoreip }}
+
+{% if ansible_distribution == "Amazon" %}
+[ssh-iptables]
+enabled  = true
+filter   = sshd-preauth
+action   = iptables[name=SSH, port=ssh, protocol=tcp]
+logpath  = /var/log/secure
+{% else %}
 backend = systemd
 
 [sshd]
 enabled = true
 banaction = firewallcmd-ipset
+{% endif %}
 
 [ddos]
 enabled = true
@@ -16,9 +25,12 @@ backend = auto
 port = http,https
 filter = ddos
 {% if apache | bool %}
-logpath = /var/www/vhosts/{{ server_hostname }}/logs/access_log* tail
+logpath = /var/www/vhosts/{{ server_hostname }}/logs/access_log*
 {% else %}
-logpath = /var/www/vhosts/{{ server_hostname }}/logs/access.log tail
+logpath = /var/www/vhosts/{{ server_hostname }}/logs/access.log
+{% endif %}
+{% if ansible_distribution == "Amazon" %}
+action = iptables[name=DDOS, port=http,https, protocol=tcp]
 {% endif %}
 bantime  = {{ fail2ban_param.bantime }}
 findtime  = {{ fail2ban_param.findtime }}

@@ -2,9 +2,15 @@
   yum: name={{ item }} state=present
   with_items:
    - fail2ban
-   - fail2ban-systemd
   tags: fail2ban
   when: "{{ fail2ban | bool }}"
+
+- name: install the 'fail2ban-systemd'
+  yum: name={{ item }} state=present
+  with_items:
+   - fail2ban-systemd
+  tags: fail2ban-systemd
+  when: (ansible_distribution == "RedHat" or ansible_distribution == "CentOS") and "{{ fail2ban | bool }}"
 
 - name: Create fail2ban configuration file
   template: src=jail.local.j2 dest=/etc/fail2ban/jail.local
@@ -15,6 +21,11 @@
   template: src=ddos.conf.j2 dest=/etc/fail2ban/filter.d/ddos.conf
   tags: fail2ban
   when: "{{ fail2ban | bool }}"
+
+- name: Create fail2ban sshd-iptables configuration file
+  template: src=sshd-preauth.conf.j2 dest=/etc/fail2ban/filter.d/sshd-preauth.conf
+  tags: fail2ban
+  when: ansible_distribution == "Amazon" and "{{ fail2ban | bool }}"
 
 - name: start fail2ban
   service:
